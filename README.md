@@ -71,7 +71,7 @@ run the nodes with:
     runnodes.bat --log-to-console --logging-level=DEBUG
 
 You should now have three Corda nodes running on your machine serving 
-the template.
+the cordapps.
 
 When the nodes have booted up, you should see a message like the following 
 in the console: 
