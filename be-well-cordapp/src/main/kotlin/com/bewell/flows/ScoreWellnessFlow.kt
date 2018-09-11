@@ -128,6 +128,9 @@ object ScoreWellnessFlow {
             return waitForLedgerCommit(txId)
         }
 
+        /**
+         * Compute a score for each user - for simplicity returns a constant (healthy) score.
+         */
         private fun resolveClientScore(recentWellness: List<StateAndRef<Wellness.State>>) : Int {
             val accountId = recentWellness.first().state.data.accountId
             requireThat {

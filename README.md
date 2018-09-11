@@ -1,11 +1,22 @@
-# Be-Well Cordapp
+# Be-Well
 
-This is a sample cordapp to demonstrate the use of queryable states in Corda
-through the use-case of a health and wellness application. The contracts
-module defines the wellness contract that contains the attributes, commands
-and corresponding verification for transactions. Three flows defined in the
-cordapp module represent three operations - create, update and score on the
-wellness states.
+A sample cordapp to demonstrate the use of queryable states in
+corda through the use-case of a health and wellness application.
+
+**Be-well** represents a network with two kinds of participants -
+**user brokers** and **wellness providers**. User brokers could represent
+any organization that offers to manage users allowing them access to the
+network. Wellness providers may range from fitness and sports centers to
+health clinics that are willing to work with clients and their health.
+The environment may be envisioned with various brokers interacting with
+different wellness providers to offer features to clients. This
+application presents a simplified version of this with three features -
+creation of wellness records, updates and wellness score metrics.
+
+The contracts module defines the wellness contract that contains the
+attributes, commands and corresponding verification for transactions.
+Three flows defined in the cordapp module capture the features mentioned
+above - create, update and wellness scores.
 
 ## Pre-Requisites
 
