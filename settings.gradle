@@ -1,0 +1,2 @@
+include 'be-well-contracts'
+include 'be-well-cordapp'
