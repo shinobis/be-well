@@ -6,8 +6,7 @@ import com.bewell.contracts.data.Diet
 import com.bewell.contracts.data.Sex
 import com.bewell.contracts.data.WellnessDetails
 import com.bewell.flows.ScoreWellnessFlow.HEALTHY_SCORE
-import net.corda.core.contracts.StateRef
-import net.corda.core.crypto.SecureHash
+import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.Party
 import net.corda.core.node.services.Vault
 import net.corda.core.node.services.queryBy
@@ -57,9 +56,8 @@ class ScoreWellnessFlowTest {
         return resultFuture.getOrThrow()
     }
 
-    fun updateWellnessReport(txid: SecureHash, updatedDetails: WellnessDetails) : SignedTransaction {
-        val stateRef = StateRef(txid, 0)
-        val resultFuture = userBroker.startFlow(UpdateWellnessFlow(stateRef, updatedDetails))
+    fun updateWellnessReport(accountId: UniqueIdentifier, updatedDetails: WellnessDetails) : SignedTransaction {
+        val resultFuture = userBroker.startFlow(UpdateWellnessFlow(accountId, updatedDetails))
         mockNet.runNetwork()
 
         return resultFuture.getOrThrow()
@@ -82,7 +80,7 @@ class ScoreWellnessFlowTest {
             val change = random.nextInt(10) + 1
             val updatedWeight = if (i % 2 == 0) (details.basics.weight + change) else (details.basics.weight - change)
             val updated = details.copy(basics = details.basics.copy(weight = updatedWeight))
-            tx = updateWellnessReport(tx.id, updated)
+            tx = updateWellnessReport(accountId, updated)
         }
 
         wellnessProviderNode.registerInitiatedFlow(ScoreWellnessFlow.ProviderFlow::class.java)

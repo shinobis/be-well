@@ -45,12 +45,12 @@ object ScoreWellnessFlow {
 
         @Suspendable
         override fun call(): SignedTransaction {
-            val wellnessStateAndRefs = accountExists(accountId)
+            val wellnessStateAndRefs = serviceHub.accountExists(accountId)
             if (wellnessStateAndRefs.isEmpty())
                 throw WellnessFlowException("Unknown account id.")
 
             val currentWellness = wellnessStateAndRefs.first()
-            val recentWellness = retrieveWellness(accountId).plus(currentWellness)
+            val recentWellness = serviceHub.retrieveWellness(accountId).plus(currentWellness)
 
             val provider = currentWellness.state.data.provider
             val providerSession = initiateFlow(provider)
@@ -69,32 +69,6 @@ object ScoreWellnessFlow {
             val finalizedTx = subFlow(FinalityFlow(signedTx))
 
             return finalizedTx
-        }
-
-        private fun accountExists(accountId: UniqueIdentifier) : List<StateAndRef<Wellness.State>> {
-            val queryCriteria = VaultQueryCriteria(Vault.StateStatus.UNCONSUMED)
-            val customCriteria =
-                    VaultCustomQueryCriteria(WellnessSchemaV1.PersistentWellnessState::accountId.equal(accountId.toString()))
-
-            val criteria = queryCriteria.and(customCriteria)
-
-            val pages = serviceHub.vaultService.queryBy(Wellness.State::class.java, criteria)
-            return pages.states
-        }
-
-        private fun retrieveWellness(accountId: UniqueIdentifier) : List<StateAndRef<Wellness.State>> {
-            val asOfDateTime = LocalDate.now().minusDays(30).atStartOfDay().toInstant(ZoneOffset.UTC)
-            val consumedAfterExpression = QueryCriteria.TimeCondition(
-                    QueryCriteria.TimeInstantType.CONSUMED, ColumnPredicate.BinaryComparison(BinaryComparisonOperator.GREATER_THAN_OR_EQUAL, asOfDateTime))
-
-            val queryCriteria = VaultQueryCriteria(status = Vault.StateStatus.CONSUMED, timeCondition = consumedAfterExpression)
-            val customCriteria =
-                    VaultCustomQueryCriteria(WellnessSchemaV1.PersistentWellnessState::accountId.equal(accountId.toString()))
-
-            val criteria = queryCriteria.and(customCriteria)
-            val pages = serviceHub.vaultService.queryBy(Wellness.State::class.java, criteria)
-
-            return pages.states
         }
     }
 

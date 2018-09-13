@@ -3,7 +3,6 @@ package com.bewell.flows
 import co.paralleluniverse.fibers.Suspendable
 import com.bewell.contracts.Wellness
 import com.bewell.contracts.data.WellnessDetails
-import net.corda.core.contracts.ContractState
 import net.corda.core.flows.CollectSignatureFlow
 import net.corda.core.flows.FinalityFlow
 import net.corda.core.flows.FlowLogic

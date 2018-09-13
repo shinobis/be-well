@@ -1,10 +1,10 @@
 package com.bewell.flows
 
+import com.bewell.contracts.Wellness
 import com.bewell.contracts.data.Basics
 import com.bewell.contracts.data.Diet
 import com.bewell.contracts.data.Sex
 import com.bewell.contracts.data.WellnessDetails
-import net.corda.core.contracts.StateRef
 import net.corda.core.identity.Party
 import net.corda.core.utilities.getOrThrow
 import net.corda.testing.core.singleIdentity
@@ -48,8 +48,8 @@ class UpdateWellnessFlowTest {
         mockNet.runNetwork()
         var result = resultFuture.getOrThrow()
 
-        val stateRef = StateRef(result.id, 0)
-        resultFuture = userBroker.startFlow(UpdateWellnessFlow(stateRef, WELLNESS_DETAILS.copy(exercise = 4f, sleep = 7.5f)))
+        val accountId = (result.coreTransaction.outputStates.first() as Wellness.State).accountId
+        resultFuture = userBroker.startFlow(UpdateWellnessFlow(accountId, WELLNESS_DETAILS.copy(exercise = 4f, sleep = 7.5f)))
         mockNet.runNetwork()
 
         result = resultFuture.getOrThrow()
